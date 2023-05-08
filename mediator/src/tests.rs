@@ -116,7 +116,7 @@ fn mediate_app() {
         }
     }
 
-    let app = TestApp::default().mediate(TestModule.with_label("test"));
+    let app = TestApp::default().mediate(TestModule.labelled("test"));
 
     assert!(!app.inited, "inited = {0}", app.inited);
 
@@ -124,7 +124,7 @@ fn mediate_app() {
     app.config_source
         .0
         .insert("test".to_string(), serde_json::to_string(&true).unwrap());
-    app = app.mediate(TestModule.with_label("test"));
+    app = app.mediate(TestModule.labelled("test"));
 
     assert!(app.inited, "inited = {0}", app.inited)
 }

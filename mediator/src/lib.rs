@@ -19,6 +19,8 @@ pub enum ConfigParseErr {
     NoKey,
     #[error("unable to deserialize into desired type")]
     DeserializeFail,
+    #[error("{0:?}")]
+    Other(String),
 }
 
 pub trait Mediate<M> {
