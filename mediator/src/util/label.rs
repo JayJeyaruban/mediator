@@ -28,7 +28,7 @@ pub trait FindByLabel<L1, L2, T: ?Sized> {
     fn find_by_label(&self, label: L1) -> Option<&Labelled<L2, T>>;
 }
 
-impl<L, L1, L2, T> FindByLabel<L1, L2, T> for Vec<L>
+impl<L, L1, L2, T: ?Sized> FindByLabel<L1, L2, T> for Vec<L>
 where
     L: Borrow<Labelled<L2, T>>,
     L1: PartialEq<L2>,

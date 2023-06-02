@@ -1,2 +1,2 @@
 [workspace]
-members = ["mediator"]
+members = ["mediator", "mediator-config"]
