@@ -28,35 +28,6 @@ pub trait Mediate<M> {
     fn mediate(self, module: M) -> Self::Out;
 }
 
-impl<T, M> Mediate<Option<M>> for T
-where
-    T: Mediate<M, Out = Self>,
-{
-    type Out = Self;
-
-    fn mediate(self, module: Option<M>) -> Self::Out {
-        if let Some(module) = module {
-            self.mediate(module)
-        } else {
-            self
-        }
-    }
-}
-
-impl<T, M> Mediate<Vec<M>> for T
-where
-    T: Mediate<M, Out = Self>,
-{
-    type Out = Self;
-
-    fn mediate(mut self, modules: Vec<M>) -> Self::Out {
-        for module in modules {
-            self = self.mediate(module)
-        }
-        self
-    }
-}
-
 pub trait Module {
     type Config;
     type Out;

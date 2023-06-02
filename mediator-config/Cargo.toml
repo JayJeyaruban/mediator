@@ -1,0 +1,13 @@
+[package]
+name = "mediator-config"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+config = "0.13.3"
+derive_more = "0.99.17"
+mediator = { path = "../mediator" }
+serde = "1.0.162"
+
+[dev-dependencies]
+config = { features = ["yaml"] }
