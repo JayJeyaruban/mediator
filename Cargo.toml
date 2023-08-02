@@ -1,2 +1,5 @@
 [workspace]
 members = ["mediator", "mediator-config", "mediator-tracing"]
+
+[workspace.dependencies]
+derive_more = "0.99.17"

@@ -11,6 +11,8 @@ serde = "1.0.162"
 tracing-opentelemetry = "0.18.0"
 opentelemetry-otlp = "0.11.0"
 opentelemetry = "0.18.0"
+derive_more = { workspace = true }
+strum = { version = "0.25.0", features = ["derive"] }
 
 [features]
 export-tracing = []

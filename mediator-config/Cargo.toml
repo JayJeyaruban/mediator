@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 config = "0.13.3"
-derive_more = "0.99.17"
+derive_more = { workspace = true }
 mediator = { path = "../mediator" }
 serde = "1.0.162"
 
