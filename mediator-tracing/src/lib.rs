@@ -4,14 +4,14 @@ use mediator::Module;
 use serde::Deserialize;
 use strum::AsRefStr;
 use tracing::{metadata::LevelFilter, trace, Level};
-use tracing_opentelemetry::OpenTelemetryLayer;
 use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, Layer};
 
 #[cfg(feature = "export-tracing")]
 pub use tracing;
-#[cfg(feature = "export-tracing")]
-pub use tracing_subscriber;
 
+#[cfg(not(feature = "export-tracing"))]
+use tracing_subscriber::filter::Targets;
+#[cfg(feature = "export-tracing")]
 pub use tracing_subscriber::filter::Targets;
 
 #[derive(Deserialize, Default)]
@@ -24,6 +24,7 @@ pub struct RuntimeTracingConfigOverride {
 #[derive(Deserialize)]
 pub enum TracingLayer {
     Log,
+    #[cfg(feature = "otel")]
     Otel,
 }
 
@@ -141,18 +142,29 @@ impl TracingModule {
                     )
                     .init();
             }
+            #[cfg(feature = "otel")]
             TracingLayer::Otel => {
-                let otlp_tracer = opentelemetry_otlp::new_pipeline()
-                    .tracing()
-                    .with_exporter(opentelemetry_otlp::new_exporter().tonic())
-                    .install_simple()
-                    .expect("Unable to initialize otlp tracer.");
-                tracing_subscriber::registry()
-                    .with(OpenTelemetryLayer::new(otlp_tracer).with_filter(trace_targets))
-                    .init();
+                otel::init_otel();
             }
             _ => todo!(),
         }
         trace!("Tracing initialized");
+    }
+}
+
+#[cfg(feature = "otel")]
+mod otel {
+    use tracing_opentelemetry::OpenTelemetryLayer;
+    use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, Layer};
+
+    pub fn init_otel() {
+        let otlp_tracer = opentelemetry_otlp::new_pipeline()
+            .tracing()
+            .with_exporter(opentelemetry_otlp::new_exporter().tonic())
+            .install_simple()
+            .expect("Unable to initialize otlp tracer.");
+        tracing_subscriber::registry()
+            .with(OpenTelemetryLayer::new(otlp_tracer).with_filter(trace_targets))
+            .init();
     }
 }
